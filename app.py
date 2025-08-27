@@ -148,15 +148,24 @@ async def check_join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 
 def main():
+    BOT_TOKEN = os.environ.get("API_TOKEN")  
+
     if BOT_TOKEN is None or BOT_TOKEN == "" or BOT_TOKEN == "PASTE_YOUR_BOT_TOKEN_HERE":
-        raise RuntimeError("BOT_TOKEN not set. Set the BOT_TOKEN environment variable or paste token in code.")
+        raise RuntimeError("BOT_TOKEN not set. Set the BOT_TOKEN environment variable.")
 
     app = Application.builder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(check_join_callback, pattern="check_join"))
 
-    logger.info("Bot started — polling for updates")
-    app.run_polling()
+
+    PORT = int(os.environ.get("PORT", "8443"))
+
+    
+    app.run_webhook(listen="0.0.0.0",
+                      port=PORT,
+                      webhook_url= "YOUR_RENDER_EXTERNAL_URL"
+                      )
+
 
 
 if __name__ == "__main__":
