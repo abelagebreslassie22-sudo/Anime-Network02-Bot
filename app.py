@@ -150,7 +150,7 @@ async def check_join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
 def main():
     BOT_TOKEN = os.environ.get("API_TOKEN")  
 
-    if BOT_TOKEN is None or BOT_TOKEN == "" or BOT_TOKEN == "PASTE_YOUR_BOT_TOKEN_HERE":
+    if BOT_TOKEN is None or BOT_TOKEN == "" or BOT_TOKEN == "8499529604:AAGPAzFFGI30eXnyALob3UgkD4GV-dfiTIs":
         raise RuntimeError("BOT_TOKEN not set. Set the BOT_TOKEN environment variable.")
 
     app = Application.builder().token(BOT_TOKEN).build()
