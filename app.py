@@ -123,7 +123,7 @@ async def check_join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
         await query.edit_message_text("✅ Verified! Sending episodes now...")
         await send_season_episodes(context.bot, user.id, season_key)
     else:
-        # Build message with buttons at the same time
+        
         keyboard = []
         for ch in missing:
             if ch == "@CartoonNetwork02":
@@ -148,25 +148,30 @@ async def check_join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 
 def main():
-    BOT_TOKEN = os.environ.get("API_TOKEN")  
+    BOT_TOKEN = os.environ.get("API_TOKEN")
 
-    if BOT_TOKEN is None or BOT_TOKEN == "" or BOT_TOKEN == "PASTE_YOUR_BOT_TOKEN_HERE":
-        raise RuntimeError("BOT_TOKEN not set. Set the BOT_TOKEN environment variable.")
+    if not BOT_TOKEN:
+        raise RuntimeError("BOT_TOKEN not set.  Set the API_TOKEN environment variable.")
 
     app = Application.builder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(check_join_callback, pattern="check_join"))
 
-
     PORT = int(os.environ.get("PORT", "8443"))
+    RENDER_EXTERNAL_URL = os.environ.get("RENDER_EXTERNAL_URL") 
 
-    
+    if not RENDER_EXTERNAL_URL:
+        raise RuntimeError("RENDER_EXTERNAL_URL not set. Set the RENDER_EXTERNAL_URL environment variable in Render.")
+
+    logger.info(f"Starting webhook on port {PORT} with webhook URL {RENDER_EXTERNAL_URL}")
+
+
     app.run_webhook(listen="0.0.0.0",
                       port=PORT,
-                      webhook_url= "YOUR_RENDER_EXTERNAL_URL"
-                      )
+                      webhook_url=RENDER_EXTERNAL_URL)
 
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     main()
+
